@@ -1,0 +1,73 @@
+;========================================================
+;Description: Program of Project 2 Direct I/O operation.
+;     It is one of the assignment of the offline examination of
+;    assembly and interfacing class in spring semester 2022.
+;Author:
+;Student ID:
+;Date:1st June 2022
+;========================================================
+;In this program, we try to do input from a piece of 74LS245,
+;    to acquire the state of a set of button switches.
+;Then try to do output to a piece of 74LS373 latcher,
+;    to control a set of LED lights and display the state acquired.
+
+.MODEL SMALL
+.STACK 32
+.DATA
+;B8255C    EQU    300H    ;base address of 8255 chip
+;CNTL    EQU    83H    ;   define the control word
+
+.CODE
+MAIN PROC FAR
+MOV    AX, @DATA
+MOV    DS, AX
+MOV AX,0
+;MOV    DX, B8255C+3    ;load ctrl reg. address
+;MOV    AL,CNTL
+;OUT    DX, AL        ;   setup the control word reg of 8255
+TODO1:
+;MOV   AL,01H
+MOV    DX, 50H        ;load Y2 address
+IN    AL,DX
+;OUT    DX, AL      ;TODO1: acquire switches
+;MOV   AL,0
+;OUT   DX,AL
+
+
+;MOV   AL,00H
+MOV    DX, 48H        ;load Y1 address
+OUT    DX, AL;TODO2: out put to PORT_OUT
+;MOV   AL,1
+;OUT   DX,AL
+
+CALL DELAY;TODO3: call the DELAY subprocedure before loop back to TODO1
+
+JMP  TODO1
+;TODO3: quit to DOS
+MOV AX, 4C00H
+INT 21H
+MAIN ENDP
+;;==============================================================
+;Subprocedure: DELAY
+;delay for some millseconds
+DELAY    PROC
+PUSH BX;
+PUSH CX;
+MOV BX,10h
+mov CX,00
+loop_OUT:
+MOV CX, 10h
+loop_inner:
+DEC CX
+JNZ loop_inner
+DEC BX
+JNZ loop_OUT
+POP CX;
+POP BX;
+RET
+DELAY    ENDP
+END MAIN
+
+
+
+; [SOURCE]: E:\programs\emu8085\emu8086\MySource\mycode.asm

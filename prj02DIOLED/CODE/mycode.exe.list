@@ -1,0 +1,125 @@
+EMU8086 GENERATED LISTING. MACHINE CODE <- SOURCE.
+ 
+mycode.exe -- emu8086 assembler version: 4.08  
+ 
+[ 18-Jun-2022  --  10:02:52 PM ] 
+ 
+===================================================================================================
+[LINE]     LOC: MACHINE CODE                          SOURCE
+===================================================================================================
+ 
+[   1]        :                                       ;========================================================
+[   2]        :                                       ;Description: Program of Project 2 Direct I/O operation.
+[   3]        :                                       ;	 It is one of the assignment of the offline examination of
+[   4]        :                                       ;    assembly and interfacing class in spring semester 2022.
+[   5]        :                                       ;Author:
+[   6]        :                                       ;Student ID:
+[   7]        :                                       ;Date:1st June 2022
+[   8]        :                                       ;========================================================
+[   9]        :                                       ;In this program, we try to do input from a piece of 74LS245,
+[  10]        :                                       ;    to acquire the state of a set of button switches.
+[  11]        :                                       ;Then try to do output to a piece of 74LS373 latcher,
+[  12]        :                                       ;    to control a set of LED lights and display the state acquired.
+[  13]        :                                       
+[  14]        :                                       .MODEL SMALL
+[  15]        :                                       .STACK 32
+[  16]        :                                       .DATA
+[  17]        :                                       ;B8255C	EQU	300H	;base address of 8255 chip
+[  18]        :                                       	;CNTL	EQU	83H	;   define the control word
+[  19]        :                                       
+[  20]        :                                       .CODE
+[  21]    0020:                                       MAIN PROC FAR
+[  22]    0020: B8 02 00                              	MOV	AX, @DATA
+[  23]    0023: 8E D8                                 	MOV	DS, AX
+[  24]    0025: B8 00 00                              	MOV AX,0
+[  25]        :                                       	;MOV	DX, B8255C+3	;load ctrl reg. address
+[  26]        :                                       	;MOV	AL,CNTL
+[  27]        :                                       	;OUT	DX, AL		;   setup the control word reg of 8255
+[  28]    0028:                                       TODO1:
+[  29]        :                                       ;MOV   AL,01H
+[  30]    0028: BA 50 00                              	  MOV	DX, 50H	    ;load Y2 address
+[  31]    002B: EC                                    	  IN	AL,DX
+[  32]        :                                       	  ;OUT	DX, AL      ;TODO1: acquire switches
+[  33]        :                                       	  ;MOV   AL,0
+[  34]        :                                       	  ;OUT   DX,AL
+[  35]        :                                       	
+[  36]        :                                       	
+[  37]        :                                       	  ;MOV   AL,00H
+[  38]    002C: BA 48 00                              	  MOV	DX, 48H	    ;load Y1 address
+[  39]    002F: EE                                    	  OUT	DX, AL;TODO2: out put to PORT_OUT
+[  40]        :                                       	  ;MOV   AL,1
+[  41]        :                                       	  ;OUT   DX,AL
+[  42]        :                                       	
+[  43]    0030: E8 07 00                              	CALL DELAY;TODO3: call the DELAY subprocedure before loop back to TODO1
+[  44]        :                                       	
+[  45]    0033: EB F3                                 	JMP  TODO1
+[  46]        :                                       	;TODO3: quit to DOS
+[  47]    0035: B8 00 4C                              	MOV AX, 4C00H
+[  48]    0038: CD 21                                 	INT 21H
+[  49]        :                                       MAIN ENDP
+[  50]        :                                       ;;==============================================================
+[  51]        :                                       ;Subprocedure: DELAY
+[  52]        :                                       ;delay for some millseconds
+[  53]    003A:                                       DELAY	PROC
+[  54]    003A: 53                                    PUSH BX;
+[  55]    003B: 51                                    PUSH CX;
+[  56]    003C: BB 10 00                              		MOV BX,10h
+[  57]    003F: B9 00 00                              		mov CX,00
+[  58]    0042:                                       loop_OUT:
+[  59]    0042: B9 10 00                              		MOV CX, 10h
+[  60]    0045:                                       loop_inner:
+[  61]    0045: 49                                    DEC CX
+[  62]    0046: 75 FD                                 		JNZ loop_inner			
+[  63]    0048: 4B                                    		DEC BX			
+[  64]    0049: 75 F7                                 		JNZ loop_OUT	
+[  65]    004B: 59                                    		POP CX;
+[  66]    004C: 5B                                    		POP BX;	
+[  67]    004D: C3                                    		RET
+[  68]        :                                       DELAY	ENDP
+[  69]        :                                       END MAIN
+[  70]        :                                       
+ 
+===================================================================================================
+ 
+EXE HEADER - bytes from 0000 to 01FF inclusive.
+
+0000: 4D      -   exe signature (M)
+0001: 5A      -   exe signature (Z)
+0002: 4E      -   bytes on last page (l.byte)
+0003: 00      -   bytes on last page (h.byte)
+0004: 02      -   512 byte pages in file (l.byte)
+0005: 00      -   512 byte pages in file (h.byte)
+0006: 01      -   relocations (l.byte)
+0007: 00      -   relocations (h.byte)
+0008: 20      -   paragraphs in header (l.byte)
+0009: 00      -   paragraphs in header (h.byte)
+000A: 00      -   minimum memory (l.byte)
+000B: 00      -   minimum memory (h.byte)
+000C: FF      -   maximum memory (l.byte)
+000D: FF      -   maximum memory (h.byte)
+000E: 00      -   SS - stack segment (l.byte)
+000F: 00      -   SS - stack segment (h.byte)
+0010: 20      -   SP - stack pointer (l.byte)
+0011: 00      -   SP - stack pointer (h.byte)
+0012: 39      -   check sum (l.byte)
+0013: 84      -   check sum (h.byte)
+0014: 00      -   IP - instruction pointer (l.byte)
+0015: 00      -   IP - instruction pointer (h.byte)
+0016: 02      -   CS - code segment (l.byte)
+0017: 00      -   CS - code segment (h.byte)
+0018: 1E      -   relocation table adress (l.byte)
+0019: 00      -   relocation table adress (h.byte)
+001A: 00      -   overlay number (l.byte)
+001B: 00      -   overlay number (h.byte)
+001C: 01      -   signature (l.byte)
+001D: 00      -   signature (h.byte)
+001E: 01      -   relocation table - offset inside segment (l.byte)
+001F: 00      -   relocation table - offset inside segment (h.byte)
+0020: 02      -   relocation table - segment anchor (l.byte)
+0021: 00      -   relocation table - segment anchor (h.byte)
+0022 to 01FF  -   reserved relocation area  (00) 
+
+
+
+
+===================================================================================================
